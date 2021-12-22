@@ -10,6 +10,7 @@ const cors = require('cors');
 const { decodeToken } = require('./app/auth/middleware');
 
 const authRouter = require('./app/auth/router');
+const UserRouter = require('./app/routers/UserRouter');
 const MembershipRouter = require('./app/routers/MembershipRouter');
 const RentManagementRouter = require('./app/routers/RentManagementRouter');
 const BookManagementRouter = require('./app/routers/BookManagementRouter');
@@ -32,9 +33,10 @@ app.use(decodeToken());
 
 //router here
 app.use('/api', authRouter);
-app.use('/api', MembershipRouter);
-app.use('/api', RentManagementRouter);
-app.use('/api', BookManagementRouter);
+app.use('/api', checkUser, UserRouter);
+app.use('/api', checkUser, MembershipRouter);
+app.use('/api', checkUser, RentManagementRouter);
+app.use('/api', checkUser, BookManagementRouter);
 
 
 // catch 404 and forward to error handler
