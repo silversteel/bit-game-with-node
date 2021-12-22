@@ -8,6 +8,7 @@ CREATE TABLE gudang_ilmu_lib.user (
 	last_login timestamp with time zone,
     is_activated boolean DEFAULT false,
     is_deleted boolean DEFAULT false,
+    token text,
     created_date timestamp with time zone DEFAULT now() NOT NULL,
     created_by character varying(200) NOT NULL,
     changed_date timestamp with time zone,
@@ -16,8 +17,8 @@ CREATE TABLE gudang_ilmu_lib.user (
     deleted_by character varying(200)
 );
 
-CREATE TABLE gudang_ilmu_lib.user.book_location (
-	id_location serial NOT NULL,
+CREATE TABLE gudang_ilmu_lib.book_location (
+	id_location serial NOT NULL PRIMARY KEY,
 	rack_code character varying(25) NOT NULL,
 	rack_description text,
 	is_deleted boolean DEFAULT false,
@@ -29,14 +30,14 @@ CREATE TABLE gudang_ilmu_lib.user.book_location (
     deleted_by character varying(200)
 );
 
-CREATE TABLE gudang_ilmu_lib.user.book (
+CREATE TABLE gudang_ilmu_lib.book (
 	id_book character varying(200) NOT NULL PRIMARY KEY,
 	code character varying(25) NOT NULL,
 	title text NOT NULL,
     author character varying(200) NOT NULL,
 	publisher character varying(50),
 	description text,
-	id_location int REFERENCES gudang_ilmu_lib.user.book_location(id_location),
+	id_location int REFERENCES gudang_ilmu_lib.book_location(id_location),
 	is_deleted boolean DEFAULT false,
     created_date timestamp with time zone DEFAULT now() NOT NULL,
     created_by character varying(200) NOT NULL,
@@ -46,7 +47,7 @@ CREATE TABLE gudang_ilmu_lib.user.book (
     deleted_by character varying(200)
 );
 
-CREATE TABLE gudang_ilmu_lib.user.membership (
+CREATE TABLE gudang_ilmu_lib.membership (
 	id_membership character varying(200) NOT NULL PRIMARY KEY,
 	nik character varying(16) NOT NULL,
 	name character varying(250) NOT NULL,
@@ -64,20 +65,19 @@ CREATE TABLE gudang_ilmu_lib.user.membership (
     deleted_by character varying(200)
 );
 
-CREATE TABLE gudang_ilmu_lib.user.book_rent (
+CREATE TABLE gudang_ilmu_lib.book_rent (
 	id_rent character varying(200) NOT NULL PRIMARY KEY,
 	rent_date timestamp with time zone NOT NULL,
     return_date timestamp with time zone,
-    id_membership character varying(200) REFERENCES gudang_ilmu_lib.user.membership(id_membership),
+    id_membership character varying(200) REFERENCES gudang_ilmu_lib.membership(id_membership),
     created_date timestamp with time zone DEFAULT now() NOT NULL,
     created_by character varying(200) NOT NULL,
     changed_date timestamp with time zone,
     changed_by character varying(200)
 );
 
-CREATE TABLE gudang_ilmu_lib.user.book_rent_detail (
+CREATE TABLE gudang_ilmu_lib.book_rent_detail (
 	id_rent_detail bigserial NOT NULL,
-	id_book character varying(200) REFERENCES gudang_ilmu_lib.user.book(id_book),
-    id_rent character varying(200) REFERENCES gudang_ilmu_lib.user.book_rent(id_rent)
+	id_book character varying(200) REFERENCES gudang_ilmu_lib.book(id_book),
+    id_rent character varying(200) REFERENCES gudang_ilmu_lib.book_rent(id_rent)
 );
-
