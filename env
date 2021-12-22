@@ -1,0 +1,8 @@
+SERVICE_NAME=gudang_ilmu_lib-service
+TOKEN_SECRET=3d83fa87ddc302650401f42287e79271594baf2108016b23f66c8fb6dddf34f4e43a5e0709ac0f41a47fbd5ae2a7a228dce7adb84fa6858dc09526c04a3f61d1
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres 
+DB_PASS=postgres 
+DB_NAME=gudang_ilmu_lib
+DB_URL=postgres
