@@ -37,12 +37,12 @@ async function updateUser(id_user, username, password) {
 
     if (username) {
       let totalParams = parseInt(params.length) + 1;
-      query += " username = $"+totalParams+",";
-      params.push(password);
+      query += " , username = $"+totalParams+"";
+      params.push(username);
     }
     if (password) {
       let totalParams = parseInt(params.length) + 1;
-      query += " password = $"+totalParams+",";
+      query += " , password = $"+totalParams+"";
       params.push(password);
     }
     if (!username && !password) {
