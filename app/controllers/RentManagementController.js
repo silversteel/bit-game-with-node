@@ -34,9 +34,9 @@ async function create(req, res) {
 async function remove(req, res) {
     try {
         const { code } = req.body;
-        const checkBookManagement = await bookManagementModel.findById(code);
-        if (checkBookManagement.rowCount > 0) {
-            const result = await bookManagementModel.remove(code);
+        const checkRentManagement = await rentManagementModel.findById(code);
+        if (checkRentManagement.rowCount > 0) {
+            const result = await rentManagementModel.remove(code);
             if (result.rowCount > 0) {
                 res.status(200);
                 res.json({
@@ -61,7 +61,47 @@ async function readAll(req, res) {
     try {
         let { bookCode, title, publisher, orderBy, asc } = req.body;
         asc = asc ? "ASC" : "DESC";
-        const response = await bookManagementModel.findAllOrderBy(bookCode, title, publisher, orderBy, asc);
+        const response = await rentManagementModel.findAllOrderBy(bookCode, title, publisher, orderBy, asc);
+        if (response.rowCount > 0) {
+            res.status(200);
+            res.json(response.rows);
+        } else {
+            res.status(200);
+            res.json([]);
+        }
+    } catch (error) {
+        res.status(500);
+        res.json({
+            message: error.message
+        });
+    }
+}
+
+async function rentListView(req, res) {
+    try {
+        let { bookCode, title, publisher, orderBy, asc } = req.body;
+        asc = asc ? "ASC" : "DESC";
+        const response = await rentManagementModel.findAllOrderBy(bookCode, title, publisher, orderBy, asc);
+        if (response.rowCount > 0) {
+            res.status(200);
+            res.json(response.rows);
+        } else {
+            res.status(200);
+            res.json([]);
+        }
+    } catch (error) {
+        res.status(500);
+        res.json({
+            message: error.message
+        });
+    }
+}
+
+async function bookRentListView(req, res) {
+    try {
+        let { bookCode, title, publisher, orderBy, asc } = req.body;
+        asc = asc ? "ASC" : "DESC";
+        const response = await rentManagementModel.findAllOrderBy(bookCode, title, publisher, orderBy, asc);
         if (response.rowCount > 0) {
             res.status(200);
             res.json(response.rows);
@@ -80,5 +120,7 @@ async function readAll(req, res) {
 module.exports = {
     create,
     remove,
-    readAll
+    readAll,
+    bookRentListView,
+    rentListView
 }
