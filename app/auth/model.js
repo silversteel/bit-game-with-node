@@ -12,7 +12,7 @@ async function checkUser(username) {
 
 async function getUser(username, password) {
   try {
-    const result = await db.query('select * from gudang_ilmu_lib.user where username = $1 and password = $2', [username, password]);
+    const result = await db.query('select * from gudang_ilmu_lib.user where username = $1 and password = $2 and is_activated = true', [username, password]);
     return result;
   } catch (error) {
     console.log(error.stack);
@@ -20,9 +20,9 @@ async function getUser(username, password) {
   }
 }
 
-async function createUser(username, password, created_by) {
+async function createUser(username, password, id_user) {
   try {
-    const result = await db.query('insert into gudang_ilmu_lib.user(username, password, created_by) values($1, $2, $3)', [username, password, created_by]);
+    const result = await db.query('insert into gudang_ilmu_lib.user(id_user, username, password, created_by) values($1, $2, $3, $1)', [id_user, username, password]);
     return result;
   } catch (error) {
     console.log(error.stack);
@@ -32,7 +32,7 @@ async function createUser(username, password, created_by) {
 
 async function updateUser(id_user, username, password) {
   try {
-    let query = "update gudang_ilmu_lib.user set changed_by = $1";
+    let query = "update gudang_ilmu_lib.user set changed_date = now(), changed_by = $1";
     let params =  [id_user];
 
     if (username) {
@@ -58,9 +58,19 @@ async function updateUser(id_user, username, password) {
   }
 }
 
-async function updateToken(username, token) {
+async function deleteUser(id_user, deleted_by) {
   try {
-    const result = await db.query('update gudang_ilmu_lib.user set token = $2 where username = $1 returning username, token', [username, token]);
+    const result = await db.query('update gudang_ilmu_lib.user set is_deleted = true, deleted_date = now(), deleted_by = $2 where id_user = $1', [id_user, deleted_by]);
+    return result;
+  } catch (error) {
+    console.log(error.stack);
+    throw error;
+  }
+}
+
+async function updateToken(id_user, token) {
+  try {
+    const result = await db.query('update gudang_ilmu_lib.user set last_login = now(), token = $2 where id_user = $1 returning id_user, username, token', [id_user, token]);
     return result;
   } catch (error) {
     console.log(error.stack);
@@ -84,5 +94,6 @@ module.exports = {
   checkUser,
   updateUser,
   updateToken,
-  checkToken
+  checkToken,
+  deleteUser
 }

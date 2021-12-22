@@ -43,7 +43,7 @@ async function login(req, res, next) {
 
     let signed = jwt.sign(user, tokenSecret); // <--- ganti secret key dengan keymu sendiri, bebas yang sulit ditebak
 
-    await userModel.updateToken(user.username, signed);
+    await userModel.updateToken(user.id_user, signed);
     const dbuser = await userModel.checkUser(user.username);
 
     return res.json({
@@ -146,11 +146,40 @@ async function updateUser(req, res) {
   }
 }
 
+async function deleteUser(req, res) {
+  try {
+    const { id_user, deleted_by } = req.body;
+
+    const user = await userModel.deleteUser(id_user, deleted_by);
+    if (user.rowCount > 0) {
+      res.status(200);
+      res.json({
+        message: 'Successfully deleted!',
+        data: {
+          id_user: id_user
+        }
+      });
+    } else {
+      res.status(400);
+      res.json({
+        message: 'Wrong id_user!',
+      });
+    }
+  } catch(err) {
+    console.log(err.stack);
+    res.status(500);
+    res.json({
+      message: err.message
+    });
+  }
+}
+
 module.exports = {
   login,
   register,
   logout,
   me,
   updateUser,
+  deleteUser,
   localStrategy
 }

@@ -11,6 +11,7 @@ router.post('/me', authController.me);
 router.post('/logout', authController.logout);
 router.post('/register', authController.register);
 router.post('/user/update', authController.updateUser);
+router.post('/user/delete', authController.deleteUser);
 
 
 module.exports = router;
