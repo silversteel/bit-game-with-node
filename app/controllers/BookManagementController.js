@@ -1,13 +1,13 @@
 const bookManagementModel = require('../models/BookManagementModel');
-import { v1 as uuidv1 } from 'uuid';
+const { v4: uuidv4 } = require('uuid');
 
 async function create(req, res) {
     try {
         let { book_code, title, publisher, author, description } = req.body;
-        let id_book = uuidv1();
+        let id_book = uuidv4();
         let is_deleted = false;
         if (!code) {
-            code = uuidv1();
+            code = uuidv4();
         }
         const checkBookManagement = await bookManagementModel.findById(book_code);
         if (checkBookManagement.rowCount > 0) {
@@ -86,9 +86,9 @@ async function update(req, res) {
 
 async function readAll(req, res) {
     try {
-        let { bookCode, title, publisher, orderBy, asc } = req.body;
+        let { book_code, title, publisher, orderBy, asc } = req.body;
         asc = asc ? "ASC" : "DESC";
-        const response = await bookManagementModel.findAllOrderBy(bookCode, title, publisher, orderBy, asc);
+        const response = await bookManagementModel.findAllOrderBy(book_code, title, publisher, orderBy, asc);
         if (response.rowCount > 0) {
             res.status(200);
             res.json(response.rows);

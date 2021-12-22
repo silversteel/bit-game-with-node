@@ -1,9 +1,9 @@
 const router = require('express').Router();
 
-const bookManagementController = require('./controllers/bookManagementController');
+const rentManagementController = require('../controllers/rentManagementController');
 
-router.post('/book/management/list', bookManagementController.readAll);
-router.post('/book/management/create', bookManagementController.create);
-router.delete('/book/management/remove', bookManagementController.remove);
+router.post('/rent/management/list', rentManagementController.readAll);
+router.post('/rent/management/create', rentManagementController.create);
+router.delete('/rent/management/remove', rentManagementController.remove);
 
 module.exports = router;

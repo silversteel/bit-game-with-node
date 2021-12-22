@@ -1,24 +1,25 @@
 const rentManagementModel = require('../models/rentManagementModel');
-import { v1 as uuidv1 } from 'uuid';
+const { v4: uuidv4 } = require('uuid');
 
 // Book Rent List View 
 // Rent List View
 
 async function create(req, res) {
     try {
-        let { id_rent, rent_date, service_name, price } = req.body;
-        const checkDetailOrder = await rentManagementModel.findById(order_id, service_id);
-        if (checkDetailOrder.rowCount > 0) {
+        let { rent_date, id_membership } = req.body;
+        let id_rent = uuidv4();
+        const checkIsActivated = await rentManagementModel.findByIdMembershipIsActivated(id_membership);
+        if (checkIsActivated.rowCount > 0) {
             res.status(400);
             res.json({
-                message: 'Detail order id already exists!',
+                message: 'Can\'t input new rent for member that haven\'t return the book yet!',
             });
         } else {
-            const result = await rentManagementModel.insert(order_id, service_id, service_name, price);
+            const result = await rentManagementModel.insert(id_rent, rent_date, id_membership);
             if (result.rowCount > 0) {
                 res.status(200);
                 res.json({
-                    message: "Detail Order successfully created!"
+                    message: "Rent Book successfully created!"
                 });
             }
         }
@@ -39,7 +40,7 @@ async function remove(req, res) {
             if (result.rowCount > 0) {
                 res.status(200);
                 res.json({
-                    message: "Book successfully deleted!"
+                    message: "Rent Book successfully deleted!"
                 });
             }
         } else {

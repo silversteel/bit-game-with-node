@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const bookManagementController = require('./controllers/bookManagementController');
+const bookManagementController = require('../controllers/bookManagementController');
 
 router.post('/book/management/list', bookManagementController.readAll);
 router.post('/book/management/create', bookManagementController.create);

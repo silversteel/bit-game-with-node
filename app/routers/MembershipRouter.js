@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const membershipController = require('./controllers/bookManagementController');
+const membershipController = require('../controllers/bookManagementController');
 
 router.post('/membership/list', membershipController.readAll);
 router.post('/membership/create', membershipController.create);
