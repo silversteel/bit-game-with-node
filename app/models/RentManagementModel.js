@@ -31,9 +31,10 @@ async function remove(code, updated_by) {
     }
 }
 
-async function findAllOrderBy(bookCode, title, publisher, orderBy, asc) {
+
+async function findAllOrderBy(book_code, title, publisher, orderBy, asc) {
     try {
-        const result = await db.query('select * from gudang_ilmu_lib.book where code LIKE %$1% , title LIKE %$2% , publisher LIKE %$3% , order by $4 $5', [bookCode, title, publisher, orderBy, asc]);
+        const result = await db.query('select * from gudang_ilmu_lib.book where code LIKE %$1% , title LIKE %$2% , publisher LIKE %$3% , order by $4 $5', [book_code, title, publisher, orderBy, asc]);
         return result;
     } catch (err) {
         console.log(err.stack);
@@ -54,7 +55,6 @@ async function findById(code) {
 module.exports = {
     insert,
     remove,
-    update,
     findAllOrderBy,
     findById
 }
