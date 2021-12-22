@@ -10,6 +10,10 @@ const cors = require('cors');
 const { decodeToken } = require('./app/auth/middleware');
 
 const authRouter = require('./app/auth/router');
+const MembershipRouter = require('./app/routers/MembershipRouter');
+const RentManagementRouter = require('./app/routers/RentManagementRouter');
+const BookManagementRouter = require('./app/routers/BookManagementRouter');
+
 const { checkUser } = require('./app/middleware');
 
 var app = express();
@@ -28,6 +32,10 @@ app.use(decodeToken());
 
 //router here
 app.use('/api', authRouter);
+app.use('/api', MembershipRouter);
+app.use('/api', RentManagementRouter);
+app.use('/api', BookManagementRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
