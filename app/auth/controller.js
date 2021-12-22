@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { v4: uuidv4 } = require('uuid');
 const passport = require('passport');
 const crypto = require('crypto');
 const userModel = require('./model');
@@ -13,7 +14,7 @@ async function localStrategy(username, password, done){
   try {
     const user = await userModel.getUser(username, crypto.createHash('md5').update(password).digest('hex'));
     if (user.rowCount > 0) {
-      const { password, token, image, ...userWithoutPasswordAndToken} =  user.rows[0];
+      const { password, token, ...userWithoutPasswordAndToken} =  user.rows[0];
       return done(null, userWithoutPasswordAndToken);
     }
   } catch(err) {
@@ -49,9 +50,6 @@ async function login(req, res, next) {
       message: 'Successfully login!',
       data: {
         username: dbuser.rows[0].username,
-        email: dbuser.rows[0].email,
-        role: dbuser.rows[0].role,
-        image: dbuser.rows[0].image,
         token: signed
       }
     });
@@ -91,7 +89,7 @@ async function logout(req, res) {
 
 async function register(req, res) {
   try {
-    const { username, password, email, image, role } = req.body;
+    const { username, password } = req.body;
     const checkUser = await userModel.checkUser(username);
     if (checkUser.rowCount > 0) {
       res.status(400);
@@ -99,7 +97,7 @@ async function register(req, res) {
         message: 'Username already taken!',
       });
     } else {
-      const user = await userModel.createUser(username, crypto.createHash('md5').update(password).digest('hex'), email, image, role);
+      const user = await userModel.createUser(username, crypto.createHash('md5').update(password).digest('hex'), uuidv4());
       if (user.rowCount > 0) {
         res.status(200);
         res.json({
@@ -118,20 +116,18 @@ async function register(req, res) {
 
 async function updateUser(req, res) {
   try {
-    const { username, password, email, image, role } = req.body;
+    const { id_user, username, password } = req.body;
     let hashedpassword = null;
     if (password) {
       hashedpassword = crypto.createHash('md5').update(password).digest('hex');
     }
-    const user = await userModel.updateUser(username, hashedpassword, email, image, role);
+    const user = await userModel.updateUser(id_user, username, hashedpassword);
     if (user.rowCount > 0) {
       res.status(200);
       res.json({
         message: 'Successfully update!',
         data: {
           username: username,
-          role: role,
-          email: email,
           token: 'Bearer '+ generateAccessToken(username)
         }
       });
